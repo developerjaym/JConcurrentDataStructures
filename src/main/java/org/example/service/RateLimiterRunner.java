@@ -1,8 +1,7 @@
 package org.example.service;
 
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.IntStream;
@@ -31,22 +30,22 @@ public class RateLimiterRunner {
          *
          */
         Thread t1 = new Thread(() -> {
-            getWordsToCheck().forEach(RateLimiterRunner::examineNumber);
+            getNumbers().forEach(RateLimiterRunner::examineNumber);
         }, "t1");
         Thread t2 = new Thread(() -> {
-            getWordsToCheck().forEach(RateLimiterRunner::examineNumber);
+            getNumbers().forEach(RateLimiterRunner::examineNumber);
 
         }, "t2");
         Thread t3 = new Thread(() -> {
-            getWordsToCheck().forEach(RateLimiterRunner::examineNumber);
+            getNumbers().forEach(RateLimiterRunner::examineNumber);
 
         }, "t3");
         Thread t4 = new Thread(() -> {
-            getWordsToCheck().forEach(RateLimiterRunner::examineNumber);
+            getNumbers().forEach(RateLimiterRunner::examineNumber);
 
         }, "t4");
         Thread t5 = new Thread(() -> {
-            getWordsToCheck().forEach(RateLimiterRunner::examineNumber);
+            getNumbers().forEach(RateLimiterRunner::examineNumber);
 
         }, "t5");
 
@@ -61,17 +60,17 @@ public class RateLimiterRunner {
         t4.join();
         t5.join();
 
-
     }
 
     private static void examineNumber(String num) {
         RATE_LIMITER.acquire();
-        System.out.println(LocalTime.now().truncatedTo(ChronoUnit.SECONDS) + ": " + num);
+        System.out.println(LocalTime.now().truncatedTo(ChronoUnit.SECONDS).format(DateTimeFormatter.ofPattern("mmss")) +
+                ": " + num);
     }
 
 
 
-    private static List<String> getWordsToCheck() {
+    private static List<String> getNumbers() {
         return IntStream.range(-100_000, 1_000).mapToObj(i -> String.valueOf(i)).toList();
     }
 }
